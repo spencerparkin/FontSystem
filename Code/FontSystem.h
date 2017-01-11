@@ -60,6 +60,9 @@ public:
 	void SetFont( const std::string& font ) { this->font = font; }
 	const std::string& GetFont( void ) { return font; }
 
+	void SetFontBaseDir( const std::string& fontBaseDir ) { this->fontBaseDir = fontBaseDir; }
+	const std::string& GetFontBaseDir( void ) { return fontBaseDir; }
+
 	void SetWordWrap( bool wordWrap ) { this->wordWrap = wordWrap; }
 	bool GetWordWrap( void ) { return wordWrap; }
 
@@ -75,6 +78,9 @@ public:
 	// This is provided for convenience when a simple translation is all that's required.
 	bool DrawText( GLfloat x, GLfloat y, const std::string& text, bool staticText = false );
 
+	// Get around linker error that I can't figure out.
+	bool DrawTextCPtr( const char* text, bool staticText = false );
+
 	// This ignores wrapping.
 	bool CalcTextLength( const std::string& text, GLfloat& length );
 
@@ -88,6 +94,7 @@ private:
 	Font* GetOrCreateCachedFont( void );
 	std::string MakeFontKey( const std::string& font );
 
+	std::string fontBaseDir;
 	std::string font;
 	GLfloat lineWidth, lineHeight;
 	GLfloat baseLineDelta;

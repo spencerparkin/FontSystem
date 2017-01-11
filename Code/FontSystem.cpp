@@ -76,9 +76,12 @@ bool System::Finalize( void )
 			fontMap.erase( iter );
 		}
 
-		FT_Error error = FT_Done_Library( library );
-		if( error != FT_Err_Ok )
-			break;
+		if( initialized )
+		{
+			FT_Error error = FT_Done_Library( library );
+			if( error != FT_Err_Ok )
+				break;
+		}
 
 		initialized = false;
 
@@ -91,7 +94,7 @@ bool System::Finalize( void )
 
 /*virtual*/ std::string System::ResolveFontPath( const std::string& font )
 {
-	return "Fonts/" + font;
+	return fontBaseDir + "/" + font;
 }
 
 bool System::DrawText( GLfloat x, GLfloat y, const std::string& text, bool staticText /*= false*/ )
@@ -106,6 +109,12 @@ bool System::DrawText( GLfloat x, GLfloat y, const std::string& text, bool stati
 	glPopMatrix();
 
 	return success;
+}
+
+bool System::DrawTextCPtr( const char* text, bool staticText /*= false*/ )
+{
+	std::string str( text );
+	return DrawText( str, staticText );
 }
 
 bool System::DrawText( const std::string& text, bool staticText /*= false*/ )
@@ -181,10 +190,13 @@ Font* System::GetOrCreateCachedFont( void )
 		{
 			cachedFont = new Font( this );
 
-			if( !cachedFont->Initialize( font ) )
-				delete cachedFont;
-			else
+			if( cachedFont->Initialize( font ) )
 				fontMap[ key ] = cachedFont;
+			else
+			{
+				delete cachedFont;
+				cachedFont = nullptr;
+			}
 		}
 	}
 
