@@ -27,3 +27,11 @@
 *.exe
 *.out
 *.app
+
+# Dev-Studio Crap...
+*.opensdf
+*.sdf
+*.suo
+*.user
+Debug/
+ipch/
