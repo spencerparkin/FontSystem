@@ -35,3 +35,4 @@
 *.user
 Debug/
 ipch/
+*.VC.db
