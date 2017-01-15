@@ -36,3 +36,7 @@
 Debug/
 ipch/
 *.VC.db
+
+# Linux stuff...
+.*.dblite
+.*.swp
