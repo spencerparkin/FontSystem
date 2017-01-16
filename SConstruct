@@ -27,11 +27,12 @@ dest_dir = '/usr'
 if 'DESTDIR' in os.environ:
   dest_dir = os.environ[ 'DESTDIR' ]
 
-# Would we also want to move the header files over somewhere?
 install_env = Environment(
+	INCL = dest_dir + '/include',
   LIB = dest_dir + '/lib',
   BIN = dest_dir + '/bin',
   SHARE = dest_dir + '/share' )
 
+install_env.Install( '$INCL', h_source_list )
 install_env.Install( '$LIB', lib )
-install_env.Alias( 'install', [ '$LIB' ] )
+install_env.Alias( 'install', [ '$LIB', '$INCL' ] )
