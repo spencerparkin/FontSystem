@@ -210,6 +210,21 @@ std::string System::MakeFontKey( const std::string& font )
 	return key;
 }
 
+/*static*/ std::wstring System::GetWide( const std::string& text )
+{
+#if defined LINUX
+	setlocale( LC_ALL, "" );
+	wchar_t buffer[ 1024 ];
+	mbstowcs( buffer, text.c_str(), sizeof( buffer ) );
+	std::wstring wideText( buffer );
+	return wideText;
+#else
+	std::wstring_convert< std::codecvt_utf8_utf16< wchar_t > > converter;
+	std::wstring wideText = converter.from_bytes( text.c_str() );
+	return wideText;
+#endif
+}
+
 Font::Font( System* fontSystem )
 {
 	initialized = false;
@@ -423,8 +438,7 @@ FT_ULong Font::MakeKerningKey( FT_UInt leftGlyphIndex, FT_UInt rightGlyphIndex )
 		if( displayList == 0 )
 		{
 			GLfloat conversionFactor = CalcConversionFactor();
-			std::wstring_convert< std::codecvt_utf8_utf16< wchar_t > > converter;
-			std::wstring wideText = converter.from_bytes( text.c_str() );
+			std::wstring wideText = System::GetWide( text );
 			const wchar_t* charCodeString = wideText.c_str();
 
 			GlyphLink* glyphLink = GenerateGlyphChain( charCodeString, conversionFactor );
@@ -517,8 +531,7 @@ FT_ULong Font::MakeKerningKey( FT_UInt leftGlyphIndex, FT_UInt rightGlyphIndex )
 		if( !text.empty() )
 		{
 			GLfloat conversionFactor = CalcConversionFactor();
-			std::wstring_convert< std::codecvt_utf8_utf16< wchar_t > > converter;
-			std::wstring wideText = converter.from_bytes( text.c_str() );
+			std::wstring wideText = System::GetWide( text.c_str() );
 			const wchar_t* charCodeString = wideText.c_str();
 
 			glyphLink = GenerateGlyphChain( charCodeString, conversionFactor );

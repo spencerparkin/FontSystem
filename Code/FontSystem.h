@@ -90,6 +90,8 @@ public:
 	bool DisplayListCached( const std::string& text );
 
 	FT_Library& GetLibrary( void ) { return library; }
+	
+	static std::wstring GetWide( const std::string& text );
 
 private:
 
