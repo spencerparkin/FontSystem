@@ -1,5 +1,7 @@
 # SConstruct for FontSystem library
 
+import os
+
 obj_env = Environment()
 obj_env.Append( CCFLAGS = '--std=c++11' )
 obj_env.Append( CCFLAGS = '-DLINUX' )
@@ -19,4 +21,17 @@ lib_env = Environment()
 lib_env.Append( LIBS = '-lGL' )
 lib_env.Append( LIBS = '-lGLU' )
 lib_env.Append( LIBS = '-lfreetype6' )
-lib_env.StaticLibrary( 'FontSystem', object_list )
+lib = lib_env.StaticLibrary( 'FontSystem', object_list )
+
+dest_dir = '/usr'
+if 'DESTDIR' in os.environ:
+  dest_dir = os.environ[ 'DESTDIR' ]
+
+# Would we also want to move the header files over somewhere?
+install_env = Environment(
+  LIB = dest_dir + '/lib',
+  BIN = dest_dir + '/bin',
+  SHARE = dest_dir + '/share' )
+
+install_env.Install( '$LIB', lib )
+install_env.Alias( 'install', [ '$LIB' ] )
