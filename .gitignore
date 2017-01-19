@@ -36,6 +36,7 @@
 Debug/
 ipch/
 *.VC.db
+*.VC.opendb
 
 # Linux stuff...
 .*.dblite
